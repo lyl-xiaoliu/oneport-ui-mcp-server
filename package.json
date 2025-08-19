@@ -1,0 +1,52 @@
+{
+  "name": "oneport-ui-mcp-server",
+  "version": "1.0.0",
+  "description": "A Model Context Protocol (MCP) server for oneport/ui components, providing AI assistants with access to component source code, demos",
+  "keywords": [
+    "oneport-ui",
+    "mcp",
+    "ai",
+    "assistant",
+    "component",
+    "source code",
+    "demo"
+  ],
+  "homepage": "https://github.com/lyl-xiaoliu/oneport-ui-mcp-server#readme",
+  "bugs": {
+    "url": "https://github.com/lyl-xiaoliu/oneport-ui-mcp-server/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lyl-xiaoliu/oneport-ui-mcp-server.git"
+  },
+  "license": "MIT",
+  "author": "lyl",
+  "type": "module",
+  "main": "./build/index.js",
+  "bin": {
+    "oneport-ui-mcp": "build/index.js"
+  },
+  "files": [
+    "build/**/*",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf build",
+    "prepublishOnly": "npm run clean && npm run build && chmod +x build/index.js",
+    "start": "node build/index.js",
+    "dev": "tsc && node build/index.js",
+    "test": "./test-package.sh",
+    "examples": "./examples.sh"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.3",
+    "axios": "^1.11.0",
+    "joi": "^17.13.3",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.17.2",
+    "typescript": "^5.9.2"
+  }
+}
