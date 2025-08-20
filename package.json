@@ -1,5 +1,5 @@
 {
-  "name": "oneport-ui-mcp-server",
+  "name": "@liaoyuliang/oneport-ui-mcp-server",
   "version": "1.0.0",
   "description": "A Model Context Protocol (MCP) server for oneport/ui components, providing AI assistants with access to component source code, demos",
   "keywords": [

@@ -56,19 +56,12 @@ node build/index.js
 
 ## MCP 工具用法
 
-### 1. 通过脚本直接调用
-
-- 获取组件源码：
+### 1. 通过脚本直接启动服务
 
   ```bash
-  pnpm tsx test-get-button.ts
+  npx @liaoyuliang/oneport-ui-mcp-serve 
   ```
 
-- 获取组件 demo 示例：
-
-  ```bash
-  pnpm tsx test-get-button-demo.ts
-  ```
 
 ### 2. 通过 Cursor 调用
 
@@ -80,14 +73,14 @@ node build/index.js
 
 ## MCP 配置示例
 
-在 `~/.cursor/mcp.json` 或项目根目录 `.cursor/mcp.json` 添加：
+在 `~/.cursor/mcp.json` 
 
 ```json
 {
   "mcpServers": {
-    "oneport-ui": {
-      "command": "node",
-      "args": ["build/index.js"]
+     "oneport-ui": {
+      "command": "npx",
+      "args": ["@liaoyuliang/oneport-ui-mcp-server"]
     }
   }
 }
@@ -101,17 +94,6 @@ node build/index.js
 - `src/utils/axios.ts` 远程拉取 shadcn-ui 组件源码和 demo
 - `test-get-button.ts`、`test-get-button-demo.ts` 脚本测试工具功能
 - `build/` 目录为编译后产物
-
----
-
-## 常见问题
-
-- **工具无法调用？**  
-  检查 MCP Server 是否已启动，Cursor 的 MCP 配置是否正确。
-- **拉取源码失败？**  
-  检查网络连接，GitHub API 是否可访问。
-- **Cursor 无法发现工具？**  
-  检查 MCP Server 日志，确认工具已注册。
 
 ---
 
