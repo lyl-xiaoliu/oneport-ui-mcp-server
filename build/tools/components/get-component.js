@@ -1,9 +1,8 @@
-import { getAxiosImplementation } from '../../utils/framework.js';
+import { oneportAxios } from '../../utils/oneportAxios.js';
 import { logError } from '../../utils/logger.js';
 export async function handleGetComponent({ componentName }) {
     try {
-        const axios = await getAxiosImplementation();
-        const sourceCode = await axios.getComponentSource(componentName);
+        const sourceCode = await oneportAxios.getComponentSource(componentName);
         return {
             content: [{ type: "text", text: sourceCode }]
         };

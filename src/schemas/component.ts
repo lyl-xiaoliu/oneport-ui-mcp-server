@@ -1,4 +1,4 @@
-// Schema definitions for shadcn/ui components
+// Schema definitions for oneport/ui components
 export interface ComponentExample {
   title: string;
   code: string;

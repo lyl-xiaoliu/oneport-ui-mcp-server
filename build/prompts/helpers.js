@@ -3,70 +3,28 @@
  */
 export function getPageTypeSpecificInstructions(pageType) {
     const instructions = {
-        dashboard: `
-   - Use dashboard blocks as foundation (dashboard-01)
-   - Include metrics cards, charts, and data tables
-   - Implement sidebar navigation with proper menu structure
-   - Add header with user profile and notifications
-   - Create responsive grid layout for widgets`,
         login: `
-   - Use login blocks as reference (login-01 through login-05)
+   - Use login blocks as reference (login-01 through login-02)
    - Implement form validation with clear error messages
    - Add social authentication options if specified
    - Include forgot password and sign-up links
    - Ensure mobile-responsive design`,
-        calendar: `
-   - Use calendar blocks (calendar-01 through calendar-32)
-   - Implement different calendar views (month, week, day)
-   - Add event creation and management
-   - Include date navigation and filtering
-   - Support event categories and colors`,
         sidebar: `
-   - Use sidebar blocks as foundation (sidebar-01 through sidebar-16)
+   - Use sidebar blocks as foundation (sidebar-01)
    - Implement collapsible navigation
    - Add proper menu hierarchy
    - Include search functionality
    - Support both light and dark themes`,
-        products: `
-   - Use products blocks as reference (products-01)
-   - Create product grid/list views
-   - Implement filtering and sorting
-   - Add product details modal or page
-   - Include shopping cart functionality if needed`,
-        custom: `
-   - Analyze requirements and choose appropriate blocks
-   - Combine multiple block patterns as needed
-   - Focus on component reusability
-   - Ensure consistent design patterns`,
     };
-    return (instructions[pageType] || instructions.custom);
+    return (instructions[pageType]);
 }
 /**
  * Helper function to get optimization specific instructions
  */
 export function getOptimizationInstructions(optimization, framework) {
     const getPerformanceInstructions = (framework) => {
-        switch (framework) {
-            case "svelte":
-                return `
-   - Use Svelte's built-in reactivity with runes for fine-grained updates
-   - Minimize the use of reactive statements that cause unnecessary updates
-   - Use derived state with $derived for computed values
-   - Consider using $effect only when necessary for side effects
-   - Implement lazy loading for heavy components
-   - Use $state.raw for non-reactive data to avoid unnecessary reactivity overhead
-   - Leverage Svelte's compile-time optimizations`;
-            case "vue":
-                return `
-   - Use Vue 3's Composition API with reactive refs and computed properties
-   - Use defineAsyncComponent for code splitting and lazy loading
-   - Minimize watchers and use computed properties when possible
-   - Leverage Vue's built-in reactivity system efficiently
-   - Use shallowRef and shallowReactive for performance-critical scenarios
-   - Implement virtual scrolling for large lists using Vue Virtual Scroller`;
-            case "react":
-            default:
-                return `
+        // Framework is now fixed to React
+        return `
    - Implement React.memo for preventing unnecessary re-renders
    - Use useMemo and useCallback hooks appropriately
    - Optimize bundle size by code splitting with React.lazy
@@ -74,7 +32,6 @@ export function getOptimizationInstructions(optimization, framework) {
    - Minimize DOM manipulations and use refs efficiently
    - Use lazy loading for heavy components
    - Consider using React.startTransition for non-urgent updates`;
-        }
     };
     const instructions = {
         performance: getPerformanceInstructions(framework),
@@ -104,5 +61,5 @@ export function getOptimizationInstructions(optimization, framework) {
    - Use hardware acceleration with transform3d when needed`,
     };
     return (instructions[optimization] ||
-        `Focus on general code quality improvements and ${framework}-specific best practices implementation.`);
+        `Focus on general code quality improvements and react-specific best practices implementation.`);
 }

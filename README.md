@@ -1,13 +1,13 @@
 # oneport-ui-mcp-server
 
-A minimal [Model Context Protocol (MCP)](https://modelcontextprotocol.org/) server for Cursor integration, designed to fetch and serve component source code, demo code, and metadata from the oneport-ui (shadcn-ui) repository.
+A minimal [Model Context Protocol (MCP)](https://modelcontextprotocol.org/) server for Cursor integration, designed to fetch and serve component source code, demo code, and metadata from the oneport-ui (oneport-ui) repository.
 
 ---
 
 ## Features
 
 - List all UI components in the remote registry
-- Fetch component source code (from shadcn-ui registry, decoded)
+- Fetch component source code (from oneport-ui registry, decoded)
 - Fetch and extract demo code snippets for each component
 - Provide component metadata (name, path, dependencies, etc.)
 - Expose all features as MCP tools, auto-discoverable by Cursor
@@ -91,7 +91,7 @@ node build/index.js
 ## 目录结构
 
 - `src/tools/components/` MCP 工具实现
-- `src/utils/axios.ts` 远程拉取 shadcn-ui 组件源码和 demo
+- `src/utils/axios.ts` 远程拉取 oneport-ui 组件源码和 demo
 - `test-get-button.ts`、`test-get-button-demo.ts` 脚本测试工具功能
 - `build/` 目录为编译后产物
 

@@ -8,7 +8,7 @@ export async function start() {
   try {
     logInfo("Starting Oneport UI MCP Server...")
 
-    const version = await readVersion("1.0.0")
+    const version = await readVersion("1.0.1")
     const server = createServer(version)
 
     setupHandlers(server)

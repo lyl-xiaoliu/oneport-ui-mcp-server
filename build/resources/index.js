@@ -12,66 +12,46 @@ import { logError } from '../utils/logger.js';
 export const resources = [
     {
         name: 'get_components',
-        description: 'List of available shadcn/ui components that can be used in the project',
+        description: 'List of available oneport/ui components that can be used in the project',
         uri: 'resource:get_components',
         contentType: 'text/plain',
     }
 ];
 /**
  * Handler for the get_components resource
- * @returns List of available shadcn/ui components
+ * @returns List of available oneport/ui components
  */
 const getComponentsList = async () => {
     try {
-        // List of available components in shadcn/ui
+        // List of available components in oneport/ui
         // This hardcoded list can be updated in the future if needed
         const components = [
-            "accordion",
-            "alert",
-            "alert-dialog",
-            "aspect-ratio",
             "avatar",
-            "badge",
-            "breadcrumb",
             "button",
-            "calendar",
-            "card",
             "carousel",
+            "chat-input",
             "checkbox",
-            "collapsible",
-            "command",
-            "context-menu",
-            "data-table",
-            "date-picker",
-            "dialog",
+            "code-display",
+            "code-snippet",
+            "dialog-pure",
             "drawer",
-            "dropdown-menu",
             "form",
-            "hover-card",
             "input",
-            "label",
-            "menubar",
-            "navigation-menu",
-            "pagination",
-            "popover",
-            "progress",
+            "permissions-table",
             "radio-group",
-            "resizable",
-            "scroll-area",
             "select",
-            "separator",
-            "sheet",
-            "skeleton",
-            "slider",
-            "sonner",
-            "switch",
+            "sidebar",
             "table",
             "tabs",
             "textarea",
             "toast",
-            "toggle",
-            "toggle-group",
-            "tooltip"
+            "tooltip",
+            "topbar",
+            "upload",
+            "docs-layout",
+            "permissions-table-pure",
+            "select-pure",
+            "sidebar-pure"
         ];
         return {
             content: JSON.stringify(components, null, 2),

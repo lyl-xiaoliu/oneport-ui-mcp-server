@@ -5,7 +5,7 @@
  * resources based on parameters in the URI.
  */
 
-import { getFramework } from "../utils/framework.js"
+// Framework is now fixed to React
 
 /**
  * Resource template definitions exported to the MCP handler
@@ -15,7 +15,7 @@ export const resourceTemplates = [
   {
     name: "get_install_script_for_component",
     description:
-      "Generate installation script for a specific shadcn/ui component based on package manager",
+      "Generate installation script for a specific oneport/ui component based on package manager",
     uriTemplate:
       "resource-template:get_install_script_for_component?packageManager={packageManager}&component={component}",
     contentType: "text/plain",
@@ -23,7 +23,7 @@ export const resourceTemplates = [
   {
     name: "get_installation_guide",
     description:
-      "Get the installation guide for shadcn/ui based on build tool and package manager",
+      "Get the installation guide for oneport/ui based on build tool and package manager",
     uriTemplate:
       "resource-template:get_installation_guide?buildTool={buildTool}&packageManager={packageManager}",
     contentType: "text/plain",
@@ -76,15 +76,15 @@ export const getResourceTemplate = (uri: string) => {
           }
         }
 
-        // Get current framework and determine package name
-        const framework = getFramework()
+        // Framework is now fixed to React
+        const framework = "react"
         let packageName: string
         switch (framework) {
           case "react":
-            packageName = "shadcn"
+            packageName = "oneport"
             break
           default:
-            packageName = "shadcn"
+            packageName = "oneport"
             break
         }
 
@@ -130,8 +130,8 @@ export const getResourceTemplate = (uri: string) => {
         const buildTool = extractParam(uri, "buildTool")
         const packageManager = extractParam(uri, "packageManager")
 
-        // Get current framework first since it's used in validation
-        const currentFramework = getFramework()
+        // Framework is now fixed to React
+        const currentFramework = "react"
 
         if (!buildTool) {
           return {
@@ -155,10 +155,10 @@ export const getResourceTemplate = (uri: string) => {
         let packageName:any
         switch (currentFramework) {
           case "react":
-            packageName = "shadcn-ui"
+            packageName = "oneport-ui"
             break
           default:
-            packageName = "shadcn-ui"
+            packageName = "oneport-ui"
             break
         }
         // Generate installation guide based on build tool and package manager
@@ -175,7 +175,7 @@ export const getResourceTemplate = (uri: string) => {
                   "Navigate to your project directory:",
                   "cd my-app",
                   "",
-                  "Add shadcn/ui to your project:",
+                  "Add oneport/ui to your project:",
                   packageManager === "npm"
                     ? `npx ${packageName}@latest init`
                     : packageManager === "pnpm"
@@ -221,7 +221,7 @@ export const getResourceTemplate = (uri: string) => {
                   "Initialize Tailwind CSS:",
                   "npx tailwindcss init -p",
                   "",
-                  "Add shadcn/ui to your project:",
+                  "Add oneport/ui to your project:",
                   packageManager === "npm"
                     ? `npx ${packageName}@latest init`
                     : packageManager === "pnpm"
@@ -273,7 +273,7 @@ export const getResourceTemplate = (uri: string) => {
                   "Initialize Tailwind CSS:",
                   "npx tailwindcss init -p",
                   "",
-                  "Add shadcn/ui to your project:",
+                  "Add oneport/ui to your project:",
                   packageManager === "npm"
                     ? `npx ${packageName}@latest init`
                     : packageManager === "pnpm"
@@ -305,7 +305,7 @@ export const getResourceTemplate = (uri: string) => {
                 steps: [
                   "Make sure you have a React project set up",
                   "",
-                  "Add shadcn/ui to your project:",
+                  "Add oneport/ui to your project:",
                   packageManager === "npm"
                     ? `npx ${packageName}@latest init`
                     : packageManager === "pnpm"
@@ -341,29 +341,29 @@ export const getResourceTemplate = (uri: string) => {
                 steps: [
                   "Make sure you have a Vue project set up",
                   "",
-                  "Add shadcn-vue to your project:",
+                  "Add oneport-vue to your project:",
                   packageManager === "npm"
-                    ? `npx shadcn-vue@latest init`
+                    ? `npx oneport-vue@latest init`
                     : packageManager === "pnpm"
-                    ? `pnpm dlx shadcn-vue@latest init`
+                    ? `pnpm dlx oneport-vue@latest init`
                     : packageManager === "yarn"
-                    ? `yarn dlx shadcn-vue@latest init`
+                    ? `yarn dlx oneport-vue@latest init`
                     : packageManager === "bun"
-                    ? `bunx shadcn-vue@latest init`
-                    : `npx shadcn-vue@latest init`,
+                    ? `bunx oneport-vue@latest init`
+                    : `npx oneport-vue@latest init`,
                   "",
                   "Follow the prompts to configure components.json",
                   "",
                   "Once initialized, you can add components:",
                   packageManager === "npm"
-                    ? `npx shadcn-vue@latest add button`
+                    ? `npx oneport-vue@latest add button`
                     : packageManager === "pnpm"
-                    ? `pnpm dlx shadcn-vue@latest add button`
+                    ? `pnpm dlx oneport-vue@latest add button`
                     : packageManager === "yarn"
-                    ? `yarn dlx shadcn-vue@latest add button`
+                    ? `yarn dlx oneport-vue@latest add button`
                     : packageManager === "bun"
-                    ? `bunx shadcn-vue@latest add button`
-                    : `npx shadcn-vue@latest add button`,
+                    ? `bunx oneport-vue@latest add button`
+                    : `npx oneport-vue@latest add button`,
                   "",
                   "Now you can use the component in your Vue project!",
                 ],
@@ -413,16 +413,16 @@ export const getResourceTemplate = (uri: string) => {
                   "7. Replace src/style.css content with:",
                   '@import "tailwindcss";',
                   "",
-                  "8. Initialize shadcn-vue:",
+                  "8. Initialize oneport-vue:",
                   packageManager === "npm"
-                    ? `npx shadcn-vue@latest init`
+                    ? `npx oneport-vue@latest init`
                     : packageManager === "pnpm"
-                    ? `pnpm dlx shadcn-vue@latest init`
+                    ? `pnpm dlx oneport-vue@latest init`
                     : packageManager === "yarn"
-                    ? `yarn dlx shadcn-vue@latest init`
+                    ? `yarn dlx oneport-vue@latest init`
                     : packageManager === "bun"
-                    ? `bunx shadcn-vue@latest init`
-                    : `npx shadcn-vue@latest init`,
+                    ? `bunx oneport-vue@latest init`
+                    : `npx oneport-vue@latest init`,
                   "",
                   "Choose your preferred base color (e.g., Neutral)",
                   "",
@@ -433,14 +433,14 @@ export const getResourceTemplate = (uri: string) => {
                   "",
                   "10. Add your first component:",
                   packageManager === "npm"
-                    ? `npx shadcn-vue@latest add button`
+                    ? `npx oneport-vue@latest add button`
                     : packageManager === "pnpm"
-                    ? `pnpm dlx shadcn-vue@latest add button`
+                    ? `pnpm dlx oneport-vue@latest add button`
                     : packageManager === "yarn"
-                    ? `yarn dlx shadcn-vue@latest add button`
+                    ? `yarn dlx oneport-vue@latest add button`
                     : packageManager === "bun"
-                    ? `bunx shadcn-vue@latest add button`
-                    : `npx shadcn-vue@latest add button`,
+                    ? `bunx oneport-vue@latest add button`
+                    : `npx oneport-vue@latest add button`,
                   "",
                   "11. Use the component in your Vue files:",
                   '<script setup lang="ts">',
@@ -453,7 +453,7 @@ export const getResourceTemplate = (uri: string) => {
                   "  </div>",
                   "</template>",
                   "",
-                  "You're all set! Your Vue + Vite project with Tailwind CSS v4 and shadcn-vue is ready!",
+                  "You're all set! Your Vue + Vite project with Tailwind CSS v4 and oneport-vue is ready!",
                 ],
               },
             }

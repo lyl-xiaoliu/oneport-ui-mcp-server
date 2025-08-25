@@ -6,20 +6,32 @@
  *
  * Updated for MCP SDK 1.16.0 with improved error handling and request processing.
  */
-import { CallToolRequestSchema, ListToolsRequestSchema, ListPromptsRequestSchema, } from "@modelcontextprotocol/sdk/types.js";
-import { prompts } from "../prompts/index.js";
+import { CallToolRequestSchema, ListResourcesRequestSchema, ListResourceTemplatesRequestSchema, ReadResourceRequestSchema, ListToolsRequestSchema, GetPromptRequestSchema, ListPromptsRequestSchema, } from "@modelcontextprotocol/sdk/types.js";
+import { resourceHandlers, resources } from "../resources/index.js";
+import { promptHandlers, prompts } from "../prompts/index.js";
 import { toolHandlers } from "../tools/index.js";
+import { getResourceTemplate, resourceTemplates, } from "../resource-templates/index.js";
+import { z } from "zod";
+import { validateAndSanitizeParams } from '../utils/validation.js';
 import { circuitBreakers } from '../utils/circuit-breaker.js';
 import { logError, logInfo } from '../utils/logger.js';
+// Define basic component schemas here for tool validation
+const componentSchema = { componentName: z.string() };
+const searchSchema = { query: z.string() };
+const themesSchema = { query: z.string().optional() };
+const blocksSchema = {
+    query: z.string().optional(),
+    category: z.string().optional()
+};
 /**
  * Wrapper function to handle requests with simple error handling
  */
 async function handleRequest(method, params, handler) {
     try {
         // Validate and sanitize input parameters
-        // const validatedParams = validateAndSanitizeParams(method, params);
+        const validatedParams = validateAndSanitizeParams(method, params);
         // Execute the handler with circuit breaker protection for external calls
-        const result = await circuitBreakers.external.execute(() => handler(params));
+        const result = await circuitBreakers.external.execute(() => handler(validatedParams));
         return result;
     }
     catch (error) {
@@ -34,6 +46,14 @@ async function handleRequest(method, params, handler) {
  */
 export const setupHandlers = (server) => {
     logInfo('Setting up request handlers...');
+    // List available resources when clients request them
+    server.setRequestHandler(ListResourcesRequestSchema, async (request) => {
+        return await handleRequest('list_resources', request.params, async () => ({ resources }));
+    });
+    // Resource Templates
+    server.setRequestHandler(ListResourceTemplatesRequestSchema, async (request) => {
+        return await handleRequest('list_resource_templates', request.params, async () => ({ resourceTemplates }));
+    });
     // List available tools
     server.setRequestHandler(ListToolsRequestSchema, async (request) => {
         return await handleRequest('list_tools', request.params, async () => {
@@ -41,7 +61,7 @@ export const setupHandlers = (server) => {
             const registeredTools = [
                 {
                     name: 'get_component',
-                    description: 'Get the source code for a specific oneport/ui v4 component',
+                    description: 'Get the source code for a specific oneport/ui  component',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -55,7 +75,7 @@ export const setupHandlers = (server) => {
                 },
                 {
                     name: 'get_component_demo',
-                    description: 'Get demo code illustrating how a oneport/ui v4 component should be used',
+                    description: 'Get demo code illustrating how a oneport/ui  component should be used',
                     inputSchema: {
                         type: 'object',
                         properties: {
@@ -69,19 +89,131 @@ export const setupHandlers = (server) => {
                 },
                 {
                     name: 'list_components',
-                    description: 'Get all available oneport/ui v4 components',
+                    description: 'Get all available oneport/ui  components',
                     inputSchema: {
                         type: 'object',
                         properties: {},
                     },
-                }
+                },
+                {
+                    name: 'get_component_metadata',
+                    description: 'Get metadata for a specific oneport/ui  component',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            componentName: {
+                                type: 'string',
+                                description: 'Name of the oneport/ui component (e.g., "accordion", "button")',
+                            },
+                        },
+                        required: ['componentName'],
+                    },
+                },
+                {
+                    name: 'get_directory_structure',
+                    description: 'Get the directory structure of the oneport-ui  repository',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            path: {
+                                type: 'string',
+                                description: 'Path within the repository (default:  registry)',
+                            },
+                            owner: {
+                                type: 'string',
+                                description: 'Repository owner (default: "oneport-ui")',
+                            },
+                            repo: {
+                                type: 'string',
+                                description: 'Repository name (default: "ui")',
+                            },
+                            branch: {
+                                type: 'string',
+                                description: 'Branch name (default: "main")',
+                            },
+                        },
+                    },
+                },
+                {
+                    name: 'get_block',
+                    description: 'Get source code for a specific oneport/ui  block (e.g., login-01, sidebar-01)',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            blockName: {
+                                type: 'string',
+                                description: 'Name of the block (e.g., "sidebar-01", "login-02")',
+                            },
+                            includeComponents: {
+                                type: 'boolean',
+                                description: 'Whether to include component files for complex blocks (default: true)',
+                            },
+                        },
+                        required: ['blockName'],
+                    },
+                },
+                {
+                    name: 'list_blocks',
+                    description: 'Get all available oneport/ui  blocks with categorization',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            category: {
+                                type: 'string',
+                                description: 'Filter by category ( login, sidebar)',
+                            },
+                        },
+                    },
+                },
             ];
             return { tools: registeredTools };
+        });
+    });
+    // Return resource content when clients request it
+    server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+        return await handleRequest('read_resource', request.params, async (validatedParams) => {
+            const { uri } = validatedParams;
+            // Check if this is a static resource
+            const resourceHandler = resourceHandlers[uri];
+            if (resourceHandler) {
+                const result = await Promise.resolve(resourceHandler());
+                return {
+                    contentType: result.contentType,
+                    contents: [{
+                            uri: uri,
+                            text: result.content
+                        }]
+                };
+            }
+            // Check if this is a generated resource from a template
+            const resourceTemplateHandler = getResourceTemplate(uri);
+            if (resourceTemplateHandler) {
+                const result = await Promise.resolve(resourceTemplateHandler());
+                return {
+                    contentType: result.contentType,
+                    contents: [{
+                            uri: uri,
+                            text: result.content
+                        }]
+                };
+            }
+            throw new Error(`Resource not found: ${uri}`);
         });
     });
     // List available prompts
     server.setRequestHandler(ListPromptsRequestSchema, async (request) => {
         return await handleRequest('list_prompts', request.params, async () => ({ prompts: Object.values(prompts) }));
+    });
+    // Get specific prompt content with optional arguments
+    server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+        return await handleRequest('get_prompt', request.params, async (validatedParams) => {
+            const { name, arguments: args } = validatedParams;
+            const promptHandler = promptHandlers[name];
+            if (!promptHandler) {
+                throw new Error(`Prompt not found: ${name}`);
+            }
+            return promptHandler(args);
+        });
     });
     // Tool request Handler - executes the requested tool with provided parameters
     server.setRequestHandler(CallToolRequestSchema, async (request) => {
@@ -105,3 +237,34 @@ export const setupHandlers = (server) => {
     };
     logInfo('Handlers setup complete');
 };
+/**
+ * Get Zod schema for tool validation if available
+ * Following MCP SDK 1.16.0 best practices for schema validation
+ * @param toolName Name of the tool
+ * @returns Zod schema or undefined
+ */
+function getToolSchema(toolName) {
+    try {
+        switch (toolName) {
+            case 'get_component':
+            case 'get_component_details':
+                return z.object(componentSchema);
+            case 'get_examples':
+                return z.object(componentSchema);
+            case 'get_usage':
+                return z.object(componentSchema);
+            case 'search_components':
+                return z.object(searchSchema);
+            case 'get_themes':
+                return z.object(themesSchema);
+            case 'get_blocks':
+                return z.object(blocksSchema);
+            default:
+                return undefined;
+        }
+    }
+    catch (error) {
+        logError('Schema error', error);
+        return undefined;
+    }
+}

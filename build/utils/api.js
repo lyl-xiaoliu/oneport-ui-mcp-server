@@ -1,12 +1,12 @@
 // filepath: /home/janardhan/Documents/code/Ai/mcp-starter-typescript/src/utils/api.ts
 /**
- * Legacy API utilities for shadcn/ui components
+ * Legacy API utilities for oneport/ui components
  *
- * NOTE: This file contains legacy functions that were used for scraping shadcn.com
- * The MCP server now uses direct GitHub v4 registry access in tools.ts
+ * NOTE: This file contains legacy functions that were used for scraping oneport.com
+ * The MCP server now uses direct GitHub  registry access in tools.ts
  *
  * This file is kept for potential future extensions but all functions are
- * deprecated in favor of the v4 registry approach.
+ * deprecated in favor of the  registry approach.
  */
 import { z } from 'zod';
 // Zod Schemas for type definitions (still useful for type safety)

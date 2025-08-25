@@ -1,12 +1,11 @@
-import { getAxiosImplementation } from '../../utils/framework.js';
+import { oneportAxios } from '../../utils/oneportAxios.js';
 import { logError } from '../../utils/logger.js';
 
 export async function handleGetComponentDemo({ componentName }: { componentName: string }) {
   try {
-    const axios = await getAxiosImplementation();
-    const demoCodes = await axios.getComponentDemo(componentName);
+    const demoCode = await oneportAxios.getComponentDemo(componentName);
     return {
-      content: demoCodes.map((code: string) => ({ type: "text", text: code }))
+      content: [{ type: "text", text: demoCode }]
     };
   } catch (error) {
     logError(`Failed to get demo for component "${componentName}"`, error);
